@@ -9,8 +9,7 @@ txtStart db 0ah,0dh,'UNIVERSIDAD DE SAN CARLOS DE GUATEMALA',10,13, 'FACULTAD DE
 txtMenuOption db 0ah,0dh, '1) Iniciar Juego', 10,13 , '2) Cargar Juego',10,13, '3) Salir',10,13, '$'
 prueba db 0ah,0dh, 'Prueba exito',10,13, '$'
 prueba2 db 0ah,0dh, 'La segunda opcion',10,13, '$'
-arreglo db 20 dup('$'),'$' ;Asi se define un arreglo de 20 posiciones, el dup rellena de $ todas las posiciones
-txtMovida db 20 dup('$'),'$'
+
 ;Tablero 101b representa una ficha blanca, 000b representa un espacio en blanco, 100b representa ficha negra, 111b reina blanca, 110b reina negra
 
 
@@ -22,6 +21,15 @@ row5 db 000b, 000b, 000b, 000b, 000b, 000b, 000b, 000b
 row6 db 101b, 000b, 101b, 000b, 101b, 000b, 101b, 000b
 row7 db 000b, 101b, 000b, 101b, 000b, 101b, 000b, 101b
 row8 db 101b, 000b, 101b, 000b, 101b, 000b, 101b, 000b
+;Variables de escritura
+
+arreglo db 10 dup('$'),'$' ;Asi se define un arreglo de 20 posiciones, el dup rellena de $ todas las posiciones
+txtExit db 'EXIT','$','$','$','$','$','$'
+txtSave db 'SAVE','$','$','$','$','$','$'
+txtShow db 'SHOW','$','$','$','$','$','$'
+txtNoValido db 'Opcion no valida', '$'
+msgExit db 0ah,0dh,'Juego Terminado',10,13, '$'
+msgSave db 0ah,0dh, 'Ingrese el nombre para guardar: ', '$'
 
 ;Variables de turnos
 banderaTurno db 30h
@@ -53,7 +61,18 @@ letras db 	  '     A  B  C  D  E  F  G  H ',10,13, '$'
 	headHtml db 0ah,0dh, '<head>  <title>201706357</title> </head> <body style="margin: 0x;"> <h1 style="color: rgb(43,91,140);opacity: 0.86;text-align: center;">'
 	txtDate db '05/05/2020 09:05:02'
 	txtfDate db '&nbsp;</h1>'
+	txtTableS db '<div class="table table-bordered" style="padding-right: 100px;padding-left: 450px;padding-top: 50px;text-align:center;"> <table class="table" border="collapse" >'
+	txtRowS db ' <tr>'
+	rFichaN db '<td style="background:  #a47070;"> <image src="Negra.png"></image> </td>'
+	rFichaB db '<td style="background:  #a47070;"> <image src="Blanca.png"></image> </td>'
+	rFichaRN db '<td style="background:  #a47070;"> <image src="CoronaN.png"></image> </td>'
+	rFichaRB db '<td style="background:  #a47070;"> <image src="CoronaB.png"></image> </td>'
+	rVacio db '<td style="background:  #ffffff;"> <image src="Fondo.png"></image> </td>'
+	txtRowF db '  </tr>'
+	txtTableF db '</table></div>'
 	foothtml db 0ah,0dh,'</body> </html>',10,13
+	;-----*** Reporte SAVE
+	
 ;errores
 msgErr1 db 0ah,0dh, 'Error al abrir un archivo', '$'
 msgErr2 db 0ah,0dh, 'Error al leer un archivo', '$'
@@ -65,6 +84,7 @@ msgErr4 db 0ah,0dh, 'Error al escribir un archivo', '$'
 
 ;Ficheros
 handleFichero dw ?
+pathFile db 100 dup('$')
 .code ;segmento de código
 ;================== SEGMENTO DE CODIGO ===========================
 	main proc
@@ -109,13 +129,14 @@ handleFichero dw ?
 			inPut arreglo
 			mov banderaTurno, 31h
 			printTable
-			createHTML
+			compracionTexto arreglo
 			jmp Menu
 		JuegaNegras:
 			imprime msgTurnoN
 			inPut arreglo
 			mov banderaTurno, 30h
 			printTable
+			compracionTexto arreglo
 			jmp Menu
 		;Reportes---------------------------
 
