@@ -29,7 +29,6 @@ txtSave db 'SAVE','$','$','$','$','$','$'
 txtShow db 'SHOW','$','$','$','$','$','$'
 txtNoValido db 'Opcion no valida', '$'
 msgExit db 0ah,0dh,'Juego Terminado',10,13, '$'
-msgSave db 0ah,0dh, 'Ingrese el nombre para guardar: ', '$'
 
 ;Variables de turnos
 banderaTurno db 30h
@@ -72,7 +71,14 @@ letras db 	  '     A  B  C  D  E  F  G  H ',10,13, '$'
 	txtTableF db '</table></div>'
 	foothtml db 0ah,0dh,'</body> </html>',10,13
 	;-----*** Reporte SAVE
-	
+	msgSave db 0ah,0dh, 'Ingrese el nombre para guardar: ', '$'
+	sfichaB db 'FB|'
+	sfichaN db 'FN|'
+	sfichaRB db 'RB|'
+	sfichaRN db 'RN|'
+	snoFicha db '  |'
+	sprintln db 0ah,0dh
+	msgSave2 db 0ah,0dh, 'Archivo Guardado ',10,13, '$'
 ;errores
 msgErr1 db 0ah,0dh, 'Error al abrir un archivo', '$'
 msgErr2 db 0ah,0dh, 'Error al leer un archivo', '$'

@@ -308,13 +308,26 @@ saveReport macro
 	getPath pathFile
 	createF pathFile,handleFichero
 	openFile pathFile,handleFichero
-
-	writeFile SIZEOF foothtml, foothtml, handleFichero
+	saveReport2 row8
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row7
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row6
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row5
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row4
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row3
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row2
+	writeFile SIZEOF sprintln, sprintln, handleFichero
+	saveReport2 row1
 	closeFile handleFichero
 endm
 
 saveReport2 macro array
-LOCAL MIENTRAS,FICHABE,FICHANE,VACIO,INCREMENTO,FINAL,FICHARBE,FICHARNE
+LOCAL MIENTRAS3,FICHABE3,FICHANE3,VACIO3,INCREMENTO3,FINAL3,FICHARBE3,FICHARNE3
 PUSH SI
 PUSH AX
 	xor si,si
@@ -337,26 +350,25 @@ PUSH AX
 
 	;jmp Final
 	FICHABE3:
-		imprime fichaB
+		writeFile SIZEOF sfichaB, sfichaB, handleFichero
 		jmp INCREMENTO3	
 	FICHANE3:
-		imprime fichaN
+		writeFile SIZEOF sfichaN, sfichaN, handleFichero
 		jmp INCREMENTO3
 	VACIO3:
-		imprime noFicha
+		writeFile SIZEOF snoFicha, snoFicha, handleFichero
 		jmp INCREMENTO3
 	INCREMENTO3:
 		inc si
 		inc cx
 		jmp MIENTRAS3
 	FICHARBE3:
-		imprime fichaRB
+		writeFile SIZEOF sfichaRB, sfichaRB, handleFichero
 		jmp INCREMENTO3
 	FICHARNE3:
-		imprime fichaRN
+		writeFile SIZEOF sfichaRN, sfichaRN, handleFichero
 		jmp INCREMENTO3
 	FINAL3:
-		imprime println
 POP AX
 POP SI
 endm
