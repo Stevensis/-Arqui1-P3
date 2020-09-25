@@ -65,12 +65,13 @@ endm
 
 compracionTexto macro buffer
 local compara,SHOW,EXIT,SAVE,terminar,diferente
- mov cx,10   ;Determinamos la cantidad de datos a leer/comparar
- mov AX,DS  ;mueve el segmento datos a AX
- mov ES,AX  ;Mueve los datos al segmento extra
+xor si,si
+xor di,di
 	compara:
+	 mov cx,10   ;Determinamos la cantidad de datos a leer/comparar
+	 mov AX,DS  ;mueve el segmento datos a AX
+	 mov ES,AX  ;Mueve los datos al segmento extra
 	  lea si,buffer  ;cargamos en si la cadena que contiene vec
-	  
 	  lea di,txtExit
 	  repe cmpsb
 	  je EXIT
@@ -86,24 +87,154 @@ local compara,SHOW,EXIT,SAVE,terminar,diferente
 	  repe cmpsb
 	  je SAVE
 
+	  xor si,si
+	  PUSH DI
+  	  xor di,di	
+  	  getLetra buffer
+  	  inc si
+  	  clearEspacio buffer
+  	  inc si
+  	  inc si
+  	  xor di,di
+  	  getLetra buffer
+  	  inc si
+  	  moverEspacio buffer
+  	  POP DI
+  	  jmp Turno
+
 	  jmp diferente
   	SHOW:
   		createHTML
-  		jmp terminar
+  		jmp Turno2
   	EXIT:
   		imprime msgExit
-  		jmp terminar
+  		jmp Menu
   	SAVE:
   		imprime msgSave
   		saveReport
-  		jmp terminar
+  		jmp Turno2
+  	
 	diferente:
 		imprime txtNoValido
-		jmp terminar
+		jmp Turno2
 	terminar:
-
+		
 endm
 
+
+
+clearEspacio macro buffer
+LOCAL UR1,UR2,UR3,UR4,UR5,UR6,UR7,UR8
+	cmp buffer[si],'6'
+	je UR6
+	UR1:
+		
+	UR2:
+	UR3:
+	UR4:
+	UR5:
+	UR6:
+		mov row6[di],000b
+	UR7:
+	UR8:
+endm
+
+moverEspacio macro buffer
+LOCAL MR1,MR2,MR3,MR4,MR5,MR6,MR7,MR8
+	cmp buffer[si],'5'
+	je MR5
+	MR1:
+		
+	MR2:
+	MR3:
+	MR4:
+	MR5:
+		mov row5[di],101b
+	MR6:
+	MR7:
+	MR8:
+endm
+
+getLetra macro buffer
+LOCAL ISA,ISB,ISC,ISD,ISE,ISF,ISG,ISH,IFIN
+
+	  cmp buffer[si],'A'
+	  je ISA 
+
+	  cmp buffer[si],'B'
+	  je ISB
+
+	  cmp buffer[si],'C'
+	  je ISC 
+
+	  cmp buffer[si],'D'
+	  je ISD 
+
+	  cmp buffer[si],'E'
+	  je ISE 
+
+	  cmp buffer[si],'F'
+	  je ISF 
+
+	  cmp buffer[si],'G'
+	  je ISG 
+
+	  cmp buffer[si],'H'
+	  je ISH 
+	ISA:
+  		imprime prueba
+		jmp IFIN
+  	ISB:
+  		imprime prueba
+  		inc di
+  		jmp IFIN
+  	ISC:
+  		imprime prueba
+  		inc di
+  		inc di
+  		jmp IFIN
+  	ISD:
+  		imprime prueba
+  		inc di
+  		inc di
+  		inc di
+  		jmp IFIN
+  	ISE:
+  		imprime prueba
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		jmp IFIN
+  	ISF:
+  		imprime prueba
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		jmp IFIN
+  	ISG:
+  		imprime prueba
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		jmp IFIN
+  	ISH:
+  		imprime prueba
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		inc di
+  		jmp IFIN
+  	IFIN:
+endm
 
 ; ----* Fin de comparacion
 
@@ -371,6 +502,19 @@ PUSH AX
 	FINAL3:
 POP AX
 POP SI
+endm
+; -------------------*
+clearInput macro buffer
+	mov buffer[0],'$'
+	mov buffer[1],'$'
+	mov buffer[2],'$'
+	mov buffer[3],'$'
+	mov buffer[4],'$'
+	mov buffer[5],'$'
+	mov buffer[6],'$'
+	mov buffer[7],'$'
+	mov buffer[8],'$'
+	mov buffer[9],'$'
 endm
 ; ---------------------* Fin reportes
 getDate macro

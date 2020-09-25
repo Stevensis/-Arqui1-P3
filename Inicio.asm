@@ -7,13 +7,13 @@ include MacrosP3.asm
 ;================ SEGMENTO DE DATOS ==============================
 txtStart db 0ah,0dh,'UNIVERSIDAD DE SAN CARLOS DE GUATEMALA',10,13, 'FACULTAD DE INGENIERIA', 10,13,'CIENCIAS Y SISTEMAS',10,13,'ARQUITECTURA DE COMPUTADORES Y ENSAMBLADORES 1',10,13, 'NOMBRE: STEVEN AARON SIS HERNANDEZ',10,13, 'CARNE: 201706357',10,13, 'SECCION: A', 10,13,  '$'
 txtMenuOption db 0ah,0dh, '1) Iniciar Juego', 10,13 , '2) Cargar Juego',10,13, '3) Salir',10,13, '$'
-prueba db 0ah,0dh, 'Prueba exito',10,13, '$'
+prueba db 0ah,0dh, 'Es una A el primero',10,13, '$'
 prueba2 db 0ah,0dh, 'La segunda opcion',10,13, '$'
 
 ;Tablero 101b representa una ficha blanca, 000b representa un espacio en blanco, 100b representa ficha negra, 111b reina blanca, 110b reina negra
 
 
-row1 db 000b, 110b, 000b, 100b, 000b, 100b, 000b, 100b
+row1 db 000b, 100b, 000b, 100b, 000b, 100b, 000b, 100b
 row2 db 100b, 000b, 100b, 000b, 100b, 000b, 100b, 000b
 row3 db 000b, 100b, 000b, 100b, 000b, 100b, 000b, 100b
 row4 db 000b, 000b, 000b, 000b, 000b, 000b, 000b, 000b
@@ -119,29 +119,35 @@ pathFile db 100 dup('$')
 			imprimirChar dh
 			mov dh,13
 			imprimirChar dh ;Fin impresion salto de linea
-			printTable
 			jmp Turno ;salto no condicional a la etiqueta turno
 
 			getChar
 			jmp Menu
 
 		Turno:
+			printTable
 			cmp banderaTurno, '0'
 			je JuegaBlancas
 			cmp banderaTurno, '1'
 			je JuegaNegras
+		Turno2:
+			printTable
+			cmp banderaTurno, '1'
+			je JuegaBlancas
+			cmp banderaTurno, '0'
+			je JuegaNegras
 		JuegaBlancas:
 			imprime msgTurnoB
-			inPut arreglo
+			clearInput arreglo
+			inPut arreglo	
 			mov banderaTurno, 31h
-			printTable
 			compracionTexto arreglo
 			jmp Menu
 		JuegaNegras:
 			imprime msgTurnoN
+			clearInput arreglo
 			inPut arreglo
 			mov banderaTurno, 30h
-			printTable
 			compracionTexto arreglo
 			jmp Menu
 		;Reportes---------------------------
@@ -152,19 +158,21 @@ pathFile db 100 dup('$')
 		ErrorAbrir:
 	    	imprime msgErr1
 	    	getChar
-	    	jmp Menu
+	    	jmp Turno2
 	    ErrorLeer:
 	    	imprime msgErr2
 	    	getChar
-	    	jmp Menu
+	    	jmp Turno2
 	    ErrorCrear:
 	    	imprime msgErr3
 	    	getChar
-	    	jmp Menu
+	    	jmp Turno2
 		ErrorEscribir:
 	    	imprime msgErr4
 	    	getChar
-	    	jmp Menu
+	    	jmp Turno2
+	    ;Errores Juego
+
 		;Fin Errores archivos
 		Salir: 
 			MOV ah,4ch
