@@ -36,12 +36,14 @@ endm
 writeFile macro numbytes,buffer,handle
 	PUSH CX
 	PUSH DX
+	PUSH AX
 	mov ah, 40h
 	mov bx,handle
 	mov cx,numbytes
 	lea dx,buffer
 	int 21h
 	jc ErrorEscribir
+	POP AX
 	POP DX
 	POP CX
 endm
@@ -124,35 +126,112 @@ endm
 
 
 clearEspacio macro buffer
-LOCAL UR1,UR2,UR3,UR4,UR5,UR6,UR7,UR8
+LOCAL UR1,UR2,UR3,UR4,UR5,UR6,UR7,UR8,UFIN
+	cmp buffer[si],'1'
+	je UR1
+
+	cmp buffer[si],'2'
+	je UR2
+
+	cmp buffer[si],'3'
+	je UR3
+
+	cmp buffer[si],'4'
+	je UR4
+
+	cmp buffer[si],'5'
+	je UR5
+
 	cmp buffer[si],'6'
 	je UR6
+
+	cmp buffer[si],'7'
+	je UR6
+
+	cmp buffer[si],'8'
+	je UR7
+
 	UR1:
-		
+		mov row1[di],000b
+		jmp UFIN
 	UR2:
+		mov row2[di],000b
+		jmp UFIN
 	UR3:
+		mov row3[di],000b
+		jmp UFIN
 	UR4:
+		mov row4[di],000b
+		jmp UFIN
 	UR5:
+		mov row5[di],000b
+		jmp UFIN
 	UR6:
 		mov row6[di],000b
+		jmp UFIN
 	UR7:
+		mov row7[di],000b
+		jmp UFIN
 	UR8:
+		mov row7[di],000b
+		jmp UFIN
+	UFIN:
+
 endm
 
 moverEspacio macro buffer
-LOCAL MR1,MR2,MR3,MR4,MR5,MR6,MR7,MR8
+LOCAL MR1,MR2,MR3,MR4,MR5,MR6,MR7,MR8,MFIN
+	cmp buffer[si],'1'
+	je MR1
+	
+	cmp buffer[si],'2'
+	je MR2
+
+	cmp buffer[si],'3'
+	je MR3
+
+	cmp buffer[si],'4'
+	je MR4
+
 	cmp buffer[si],'5'
 	je MR5
+
+	cmp buffer[si],'6'
+	je MR6
+
+	cmp buffer[si],'7'
+	je MR7
+
+	cmp buffer[si],'8'
+	je MR8
+
+
 	MR1:
-		
+		mov row1[di],101b
+		jmp MFIN
 	MR2:
+		mov row2[di],101b
+		jmp MFIN
 	MR3:
+		mov row3[di],101b
+		jmp MFIN
 	MR4:
+		mov row4[di],101b
+		jmp MFIN
 	MR5:
 		mov row5[di],101b
+		jmp MFIN
 	MR6:
+		mov row6[di],101b
+		jmp MFIN
 	MR7:
+		mov row7[di],101b
+		jmp MFIN
 	MR8:
+		mov row8[di],101b
+		jmp MFIN
+	MFIN:
+
 endm
 
 getLetra macro buffer
@@ -375,21 +454,31 @@ createHTML macro
 endm
 
 tableHtml macro
+	PUSH Ax
+	xor ax,ax
+	mov ax,'0'
 	rowHtml row8
+	inc ax
 	rowHtml row7
+	inc ax
 	rowHtml row6
+	inc ax
 	rowHtml row5
+	inc ax
 	rowHtml row4
+	inc ax
 	rowHtml row3
+	inc ax
 	rowHtml row2
+	inc ax
 	rowHtml row1
+	POP AX
 endm
 
 rowHtml macro row
 LOCAL HACER,FICHABE2,FICHANE2,FICHARBE2,FICHARNE2,VACIO2,INCREMENTAR,FINALIZAR
 	PUSH SI
-	PUSH AX
-
+	
 	xor si,si
 	xor cx,cx
 	mov cx, '0'
@@ -431,8 +520,74 @@ LOCAL HACER,FICHABE2,FICHANE2,FICHARBE2,FICHARNE2,VACIO2,INCREMENTAR,FINALIZAR
 		jmp HACER
 		FINALIZAR:
 		writeFile SIZEOF txtRowF, txtRowF, handleFichero
-	POP AX
 	POP SI
+endm
+
+rowVacioHtml macro 
+LOCAL IMPAR, PAR,BLACKS, WHITES, VFIN
+	cmp ax,'0'
+	je PAR
+	cmp ax,'1'
+	je IMPAR
+	cmp ax,'2'
+	je PAR
+	cmp ax,'3'
+	je IMPAR
+	cmp ax,'4'
+	je PAR
+	cmp ax,'5'
+	je IMPAR
+	cmp ax,'6'
+	je PAR
+	cmp ax,'7'
+	je IMPAR
+
+ 	jmp VFIN
+	IMPAR:
+	cmp cx,'0'
+	je BLACKS
+	cmp cx,'1'
+	je WHITES
+	cmp cx,'2'
+	je BLACKS
+	cmp cx,'3'
+	je WHITES
+	cmp cx,'4'
+	je BLACKS
+	cmp cx,'5'
+	je WHITES
+	cmp cx,'6'
+	je BLACKS
+	cmp cx,'7'
+	je WHITES
+
+ 	jmp VFIN
+	PAR:
+	imprime prueba2
+	cmp cx,'0'
+	je WHITES
+	cmp cx,'1'
+	je BLACKS
+	cmp cx,'2'
+	je WHITES
+	cmp cx,'3'
+	je BLACKS
+	cmp cx,'4'
+	je WHITES
+	cmp cx,'5'
+	je BLACKS
+	cmp cx,'6'
+	je WHITES
+	cmp cx,'7'
+	je BLACKS
+	jmp VFIN
+	BLACKS:
+	writeFile SIZEOF rVacioN, rVacioN, handleFichero
+	jmp VFIN
+	WHITES:
+	writeFile SIZEOF rVacio, rVacio, handleFichero
+	jmp VFIN
+	VFIN:
 endm
 
 saveReport macro
@@ -503,6 +658,8 @@ PUSH AX
 POP AX
 POP SI
 endm
+
+
 ; -------------------*
 clearInput macro buffer
 	mov buffer[0],'$'

@@ -67,6 +67,7 @@ letras db 	  '     A  B  C  D  E  F  G  H ',10,13, '$'
 	rFichaRN db '<td style="background:  #a47070;"> <image src="CoronaN.png"></image> </td>'
 	rFichaRB db '<td style="background:  #a47070;"> <image src="CoronaB.png"></image> </td>'
 	rVacio db '<td style="background:  #ffffff;"> <image src="Fondo.png"></image> </td>'
+	rVacioN db '<td style="background:  #a47070;"> <image src="Fondo.png"></image> </td>'
 	txtRowF db '  </tr>'
 	txtTableF db '</table></div>'
 	foothtml db 0ah,0dh,'</body> </html>',10,13
